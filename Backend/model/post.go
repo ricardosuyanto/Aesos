@@ -10,8 +10,8 @@ type Post struct {
 	Description   string `json:"description" gorm:"type:varchar(200);NOT NULL"`
 	Picture       string `json:"profile_pic gorm:"type:varchar(MAX)"`
 	Created_at    time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
-	Comment       Comment `gorm:"foreignkey:post_id"`
-	Like          Like `gorm:"foreignkey:post_id"`
+	Comment       []Comment `gorm:"foreignkey:post_id"`
+	Like          []Like `gorm:"foreignkey:post_id"`
 }
 
 func (p *Post) TableName() string {
