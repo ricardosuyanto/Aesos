@@ -18,5 +18,13 @@ type repository struct {
 func(r *repository) GetUserList() ([]model.User, error) {
 	var user []model.User
 
+	getAllUser := r.db.Find(&user)
+
+	if getAllUser.Error != nil {
+		return nil, getAllUser.Error
+	}
+
+	user = append([]model.User{}, user...)
+
 	return user, nil
 }
