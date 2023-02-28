@@ -8,14 +8,18 @@ import (
 
 type UserRepository interface {
 	GetUserList() ([]model.User, error)
-	GetUserByUsernameAndPassword(username string, password string) ([]model.User, error)
+	GetUserByUsernameAndPassword(username string, password string) (*model.User, error)
 }
 
-type repository struct {
+type userRepository struct {
 	db *gorm.DB
 }
 
-func(r *repository) GetUserList() ([]model.User, error) {
+func NewUserRepository(db *gorm.DB) *userRepository {
+	return &userRepository{db}
+}
+
+func(r *userRepository) GetUserList() ([]model.User, error) {
 	var user []model.User
 
 	getAllUser := r.db.Find(&user)
@@ -27,4 +31,16 @@ func(r *repository) GetUserList() ([]model.User, error) {
 	user = append([]model.User{}, user...)
 
 	return user, nil
+}
+
+func (r *userRepository) GetUserByUsernameAndPassword(username string, password string) (*model.User, error) {
+	var user model.User
+
+	getUser := r.db.Where("username=? AND password=? ",username,password).Take(&user)
+
+	if getUser.Error != nil {
+		return nil, getUser.Error
+	}
+
+	return &user, nil
 }
