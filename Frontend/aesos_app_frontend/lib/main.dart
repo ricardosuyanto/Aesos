@@ -1,3 +1,4 @@
+import 'package:aesos_app_frontend/widgets/home_widget.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,11 +16,7 @@ class MyApp extends StatelessWidget {
           appBar: AppBar(
             centerTitle: true,
           ),
-          body: SizedBox(
-            width: 300,
-            height: 29.2,
-            child: Image.asset("assets/chat_bubble.jpg", fit: BoxFit.fitWidth),
-          )),
+          body: HomeWidget()),
     );
   }
 }
