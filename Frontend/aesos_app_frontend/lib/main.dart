@@ -1,4 +1,5 @@
 import 'package:aesos_app_frontend/widgets/home_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,10 +14,33 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Aesos',
       home: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
+        appBar: AppBar(
+          centerTitle: true,
+        ),
+        body: HomeWidget(),
+        bottomNavigationBar: CupertinoTabBar(items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "",
           ),
-          body: HomeWidget()),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_circle_outline),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.replay),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "",
+          )
+        ]),
+      ),
     );
   }
 }

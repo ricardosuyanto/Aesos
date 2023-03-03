@@ -13,31 +13,30 @@ class HomeWidget extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.25,
             height: screenSize.height * 0.1,
             alignment: Alignment.center,
-            decoration: BoxDecoration(color: Colors.greenAccent),
             child: Image.asset('Heart.png'),
           ),
         ),
         Expanded(
-          child: Container(
-              width: MediaQuery.of(context).size.width * 0.25,
-              height: screenSize.height * 0.1,
-              decoration: BoxDecoration(color: Colors.yellow),
-              child: Column(
-                children: [
-                  Text(
-                    "Home",
-                    style: TextStyle(fontFamily: 'Amiko'),
-                    textAlign: TextAlign.center,
-                  )
-                ],
-              )),
-        ),
+            child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.25,
+          height: screenSize.height * 0.1,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Home",
+                style: TextStyle(fontFamily: 'Amiko', fontSize: 25),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        )),
         Expanded(
           child: Container(
             width: MediaQuery.of(context).size.width * 0.25,
             height: screenSize.height * 0.1,
             alignment: Alignment.center,
-            decoration: BoxDecoration(color: Colors.blue),
             child: Image.asset('chat_bubble.png'),
           ),
         ),
