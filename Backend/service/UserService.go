@@ -1,6 +1,7 @@
 package service
 
 import (
+	"Project/Aesos/middleware"
 	"Project/Aesos/model"
 	"Project/Aesos/repository"
 	"Project/Aesos/request"
@@ -11,7 +12,7 @@ import (
 
 type UserService interface {
 	GetUserList() ([]model.User, int, error)
-	GetUserByUsernameAndPassword(username string, password string) (*model.User, int, error)
+	Login(request.LoginRequest) (*model.User, string, int, error)
 	RegisterUser(request.RegisterRequest) (int, error)
 }
 
@@ -33,14 +34,20 @@ func (s *userService) GetUserList() ([]model.User, int, error) {
 	return user, http.StatusOK, nil
 }
 
-func (s *userService) GetUserByUsernameAndPassword(username string, password string) (*model.User, int, error) {
-	user, err := s.Repo.GetUserByUsernameAndPassword(username, password)
+func (s *userService) Login(request request.LoginRequest) (*model.User, string, int, error) {
+	user, err := s.Repo.Login(request)
 
 	if err != nil {
-		return nil, http.StatusInternalServerError, err
+		return nil, "", http.StatusInternalServerError, err
 	}
 
-	return user, http.StatusOK, nil
+	token, err := middleware.CreateToken(request.Username)
+
+	if err != nil {
+		return nil, "", http.StatusInternalServerError, err
+	}
+
+	return user, token, http.StatusOK, nil
 }
 
 func (s *userService) RegisterUser(request request.RegisterRequest) (int, error) {
@@ -65,6 +72,7 @@ func (s *userService) RegisterUser(request request.RegisterRequest) (int, error)
 
 	return http.StatusOK, nil
 }
+
 
 
 

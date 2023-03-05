@@ -8,12 +8,12 @@ type User struct {
 	Username      string `json:"username" gorm:"type:varchar(20);NOT NULL;unique"`
 	Password      []byte `json:"password" gorm:"type:bytea;NOT NULL"`
 	Email         string `json:"email" gorm:"type:varchar(50);NOT NULL"`
-	Date_of_birth time.Time `json:"date_of_birth" gorm:"type:date"`
+	Date_of_birth *time.Time `json:"date_of_birth" sql:"type:timestamp;default:NULL"`
 	Bio 		  string `json:"bio" gorm:"type:varchar(200)"`
 	Profile_pic   string `json:"profile_pic" gorm:"type:text"`
 	Gender        string `json:"gender" gorm:"type:varchar(10)"`
 	Created_at    time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
-	Updated_at    time.Time `json:"updated_at" gorm:"type:timestamp"`
+	Updated_at    *time.Time `json:"updated_at" sql:"type:timestamp;default:NULL"`
 	Post          []Post   `gorm:"foreignkey:user_id"`
 	Comment       []Comment `gorm:"foreignkey:user_id"`
 	Like          []Like `gorm:"foreignkey:user_id"`

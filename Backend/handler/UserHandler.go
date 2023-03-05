@@ -32,12 +32,16 @@ func (h *UserHandler) GetUserList(c* gin.Context) {
 	})
 }
 
-func(h *UserHandler) GetUserByUsernameAndPassword(c*gin.Context) {
+func(h *UserHandler) Login(c*gin.Context) {
 
-	username := c.Query("username")
-	password := c.Query("password")
+	var request request.LoginRequest
 
-	user, status, err := h.Service.GetUserByUsernameAndPassword(username, password)
+	if err := c.BindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid login request"})
+		return
+	}
+
+	user, token, status, err := h.Service.Login(request)
 	
 	if err != nil {
 		c.JSON(status, gin.H{
@@ -49,6 +53,7 @@ func(h *UserHandler) GetUserByUsernameAndPassword(c*gin.Context) {
 	c.JSON(status, gin.H{
 		"message" : "success",
 		"user": user,
+		"token": token,
 	})
 }
 

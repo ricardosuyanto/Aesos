@@ -2,6 +2,7 @@ package api
 
 import (
 	"Project/Aesos/handler"
+	"Project/Aesos/middleware"
 	"Project/Aesos/repository"
 	"Project/Aesos/service"
 
@@ -18,9 +19,10 @@ func (s *server) SetUpRouter() {
 	userService := service.NewUserService(userRepo)
 	userHandler := handler.NewUserHandler(userService)
 
-	s.Router.GET("/findUser", func(c *gin.Context){
+	s.Router.GET("/findUser", middleware.AuthMiddleware(), func(c *gin.Context){
 		userHandler.GetUserList(c)
 	})
-	s.Router.GET("/findUserByUsernameAndPassword", userHandler.GetUserByUsernameAndPassword)
+	s.Router.POST("/login", userHandler.Login)
+
 	s.Router.POST("/registerUser", userHandler.RegisterUser)
 }

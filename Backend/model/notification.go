@@ -9,7 +9,7 @@ type Notification struct {
 	Title         string `json:"title" gorm:"type:varchar(50);NOT NULL"`
 	Message   string `json:"message" gorm:"type:varchar(200);NOT NULL"`
 	Created_at    time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
-	Read_at    time.Time `json:"updated_at" gorm:"type:timestamp"`
+	Read_at    *time.Time `json:"updated_at" sql:"type:timestamp;default:NULL"`
 }
 
 func (n *Notification) TableName() string {
