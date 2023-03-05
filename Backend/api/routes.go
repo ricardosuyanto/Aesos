@@ -22,5 +22,5 @@ func (s *server) SetUpRouter() {
 		userHandler.GetUserList(c)
 	})
 	s.Router.GET("/findUserByUsernameAndPassword", userHandler.GetUserByUsernameAndPassword)
-
+	s.Router.POST("/registerUser", userHandler.RegisterUser)
 }

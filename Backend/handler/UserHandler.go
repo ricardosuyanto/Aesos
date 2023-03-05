@@ -1,11 +1,11 @@
 package handler
 
 import (
+	"Project/Aesos/request"
 	"Project/Aesos/service"
-	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type UserHandler struct {
@@ -34,17 +34,11 @@ func (h *UserHandler) GetUserList(c* gin.Context) {
 
 func(h *UserHandler) GetUserByUsernameAndPassword(c*gin.Context) {
 
-	password := []byte("password")
+	username := c.Query("username")
+	password := c.Query("password")
 
-	hashedPassword, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
-
-	if err != nil {
-        panic(err)
-    }
-    fmt.Println(string(hashedPassword))
-
-	user, status, err := h.Service.GetUserByUsernameAndPassword("ricardosuyanto", "password")
-
+	user, status, err := h.Service.GetUserByUsernameAndPassword(username, password)
+	
 	if err != nil {
 		c.JSON(status, gin.H{
 			"message" : err.Error(),
@@ -57,3 +51,29 @@ func(h *UserHandler) GetUserByUsernameAndPassword(c*gin.Context) {
 		"user": user,
 	})
 }
+
+func (h *UserHandler) RegisterUser(c *gin.Context) {
+	var request request.RegisterRequest
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message" : "Invalid request Body",
+		})
+		return
+	}
+
+	status, err := h.Service.RegisterUser(request)
+	
+	if err != nil {
+		c.JSON(status, gin.H{
+			"message" : err.Error(),
+		})
+		return
+	}
+
+	c.JSON(status, gin.H{
+		"message" : "User successfully registered !",
+	})
+	
+}
+
