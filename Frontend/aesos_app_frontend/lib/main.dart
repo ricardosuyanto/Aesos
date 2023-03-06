@@ -1,5 +1,6 @@
-import 'package:aesos_app_frontend/widgets/home_widget.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:aesos_app_frontend/responsive/mobile_screen.dart';
+import 'package:aesos_app_frontend/responsive/responsive_layout.dart';
+import 'package:aesos_app_frontend/responsive/web_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -7,39 +8,15 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Aesos',
-      home: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-        ),
-        body: HomeWidget(),
-        bottomNavigationBar: CupertinoTabBar(items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.replay),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "",
-          )
-        ]),
+      home: ResponsiveLayout(
+        mobileScreenLayout: MobileScreenLayout(),
+        webScreenLayout: WebScreenLayout(),
       ),
     );
   }
