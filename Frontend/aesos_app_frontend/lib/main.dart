@@ -1,6 +1,4 @@
-import 'package:aesos_app_frontend/responsive/mobile_screen.dart';
-import 'package:aesos_app_frontend/responsive/responsive_layout.dart';
-import 'package:aesos_app_frontend/responsive/web_screen.dart';
+import 'package:aesos_app_frontend/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,10 +12,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Aesos',
-      home: ResponsiveLayout(
-        mobileScreenLayout: MobileScreenLayout(),
-        webScreenLayout: WebScreenLayout(),
-      ),
+      theme: ThemeData.dark(),
+      home: LoginScreen(),
     );
   }
 }

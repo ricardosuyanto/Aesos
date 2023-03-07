@@ -63,6 +63,7 @@ flutter:
     - assets/chat_bubble.jpg
     - assets/chat_bubble.svg
     - assets/Heart.png
+    - assets/ic_instagram.svg
   fonts:
     - family: Amiko
       fonts:
