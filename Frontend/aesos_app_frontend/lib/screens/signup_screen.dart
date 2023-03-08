@@ -1,145 +1,184 @@
+
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../utils/color.dart';
 import '../widgets/text_field_input.dart';
+import 'login_screen.dart';
+import '../resources/auth.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  const SignupScreen({Key? key}) : super(key: key);
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  _SignupScreenState createState() => _SignupScreenState();
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
+  bool _isLoading = false;
+  Uint8List? _image;
+
 
   @override
   void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _bioController.dispose();
     _usernameController.dispose();
+  }
+
+  Future<void> signUpUser() async {
+    // set loading to true
+    setState(() {
+      _isLoading = true;
+    });
+    String email = _emailController.text.trim();
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+    // signup user using our authmethodds
+    var res = AuthMethod().signUp(
+        username: username, password: password, email: email, bio: "null");
+    // if string returned is sucess, user has been created
+    print(res.toString());
+    print(res);
+
+    if (res == "success") {
+      setState(() {
+        _isLoading = false;
+      });
+      // navigate to the home screen
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      // show the error
+      //showSnackBar(context, res);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
-          child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Flexible(
-              flex: 1,
-              child: Container(),
-            ),
-            SvgPicture.asset(
-              'assets/ic_instagram.svg',
-              color: primaryColor,
-              height: 64,
-            ),
-            const SizedBox(
-              height: 64,
-            ),
-            Stack(children: [
-              CircleAvatar(
-                radius: 64,
-                backgroundImage: NetworkImage(
-                    'https://images.unsplash.com/photo-1678235494642-0a2e3b35f808?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60'),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Flexible(
+                flex: 2,
+                child: Container(),
               ),
-              Positioned(
-                bottom: -10,
-                left: 80,
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add_a_photo),
-                ),
-              )
-            ]),
-            const SizedBox(
-              height: 64,
-            ),
-            TextFieldInput(
-                textEditingController: _usernameController,
+              SvgPicture.asset(
+                'assets/ic_instagram.svg',
+                color: primaryColor,
+                height: 64,
+              ),
+              const SizedBox(
+                height: 64,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextFieldInput(
                 hintText: 'Enter your username',
-                textInputType: TextInputType.text),
-            const SizedBox(
-              height: 24,
-            ),
-            TextFieldInput(
-                textEditingController: _emailController,
-                hintText: 'Enter your email',
-                textInputType: TextInputType.emailAddress),
-            const SizedBox(
-              height: 24,
-            ),
-            TextFieldInput(
-              textEditingController: _passwordController,
-              hintText: 'Enter your password',
-              isPass: true,
-              textInputType: TextInputType.text,
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-            TextFieldInput(
-                textEditingController: _bioController,
-                hintText: 'Enter your Bio',
-                textInputType: TextInputType.text),
-            const SizedBox(
-              height: 24,
-            ),
-            InkWell(
-              child: Container(
-                width: double.infinity,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                decoration: const ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(4),
-                      ),
-                    ),
-                    color: blueColor),
-                child: const Text('Log in'),
+                textInputType: TextInputType.text,
+                textEditingController: _usernameController,
               ),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            Flexible(
-              flex: 2,
-              child: Container(),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text("Don't you have an account?"),
+              const SizedBox(
+                height: 24,
+              ),
+              TextFieldInput(
+                hintText: 'Enter your email',
+                textInputType: TextInputType.emailAddress,
+                textEditingController: _emailController,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextFieldInput(
+                hintText: 'Enter your password',
+                textInputType: TextInputType.text,
+                textEditingController: _passwordController,
+                isPass: true,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextFieldInput(
+                hintText: 'Enter your bio',
+                textInputType: TextInputType.text,
+                textEditingController: _bioController,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              InkWell(
+                onTap: signUpUser,
+                child: Container(
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: const ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                    ),
+                    color: blueColor,
+                  ),
+                  child: !_isLoading
+                      ? const Text(
+                          'Sign up',
+                        )
+                      : const CircularProgressIndicator(
+                          color: primaryColor,
+                        ),
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              Flexible(
+                flex: 2,
+                child: Container(),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Text(
-                      "Sign up",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    child: const Text(
+                      'Already have an account?',
                     ),
                   ),
-                )
-              ],
-            )
-          ],
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: const Text(
+                        ' Login.',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }
