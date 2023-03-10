@@ -1,4 +1,3 @@
-
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,7 +22,6 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _isLoading = false;
   Uint8List? _image;
 
-
   @override
   void dispose() {
     super.dispose();
@@ -41,13 +39,13 @@ class _SignupScreenState extends State<SignupScreen> {
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
     // signup user using our authmethodds
-    var res = AuthMethod().signUp(
+    var res = await AuthMethod().signUp(
         username: username, password: password, email: email, bio: "null");
     // if string returned is sucess, user has been created
     print(res.toString());
     print(res);
 
-    if (res == "success") {
+    if (res!.statusCode == 200) {
       setState(() {
         _isLoading = false;
       });
