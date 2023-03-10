@@ -100,9 +100,7 @@ packages:
     source: sdk
     version: "0.0.0"
   http:
-
-    dependency: "direct dev"
-
+    dependency: "direct main"
     description:
       name: http
       sha256: "6aa2946395183537c8b880962d935877325d6a09a2867c3970c05c0fed6ac482"
@@ -165,14 +163,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  notifier_listener:
-    dependency: "direct main"
-    description:
-      name: notifier_listener
-      sha256: "2c3a4c588c0ba6ef327d3a5f889f79321a917c34006d179c67b31c3f2558d5ec"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.2"
   path:
     dependency: transitive
     description:
