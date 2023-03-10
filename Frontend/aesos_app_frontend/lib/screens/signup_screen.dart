@@ -1,3 +1,4 @@
+
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -21,6 +22,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _bioController = TextEditingController();
   bool _isLoading = false;
   Uint8List? _image;
+
 
   @override
   void dispose() {

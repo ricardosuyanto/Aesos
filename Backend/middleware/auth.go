@@ -32,7 +32,7 @@ func GenerateJWTSecretKey() (string, error) {
 }
 
 func CreateToken(username string) (string, error){
-	expirationTime := time.Now().Add(1 * time.Hour)
+	expirationTime := constants.TokenExpirationTime
 
 	claims := &Claims{
 		Username: username,
@@ -64,7 +64,7 @@ func AuthMiddleware() gin.HandlerFunc{
 		tokenString := authHeader[len("Bearer "):]
 
 		claims := &Claims{}
-		_, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {
+		token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {
 			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("Unexpected signing method: %v", t.Header["alg"])
 			}
@@ -76,5 +76,33 @@ func AuthMiddleware() gin.HandlerFunc{
 			c.Abort()
 			return 
 		}
+
+		newToken, status, err := refreshToken(token)
+
+		if err != nil {
+			c.JSON(status, gin.H{"message":err.Error()})
+			c.Abort()
+			return
+		}
+
+		c.Header("Authorization", newToken)
 	}
+}
+
+func refreshToken(token *jwt.Token) (string, int, error) {
+	claims, ok := token.Claims.(*Claims)
+
+	if ok && token.Valid {
+		exp := claims.ExpiresAt
+		now := time.Now().Unix()
+		if exp-now < 30 * 60 {
+			newToken, err := CreateToken(claims.Username)
+			if err != nil {
+				return "", http.StatusInternalServerError, errors.New("Failed to generate Token")
+			}
+
+			return newToken, http.StatusOK, nil
+		}
+	}
+	return "", 0, nil
 }
