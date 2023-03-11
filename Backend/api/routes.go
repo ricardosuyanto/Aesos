@@ -26,4 +26,11 @@ func (s *server) SetUpRouter() {
 	s.Router.POST("/login", userHandler.Login)
 
 	s.Router.POST("/registerUser", userHandler.RegisterUser)
+
+	postRepo := repository.NewPostRepository(s.DB)
+	postService := service.NewPostService(postRepo)
+	postHandler := handler.NewPostHandler(postService)
+
+	s.Router.POST("/makePost", postHandler.MakePost)
+	s.Router.GET("/getPostList", postHandler.GetPostList)
 }

@@ -10,7 +10,7 @@ type User struct {
 	Email         string `json:"email" gorm:"type:varchar(50);NOT NULL"`
 	Date_of_birth *time.Time `json:"date_of_birth" sql:"type:timestamp;default:NULL"`
 	Bio 		  string `json:"bio" gorm:"type:varchar(200)"`
-	Profile_pic   string `json:"profile_pic" gorm:"type:text"`
+	Profile_pic   []byte `json:"profile_pic" gorm:"type:bytea"`
 	Gender        string `json:"gender" gorm:"type:varchar(10)"`
 	Created_at    time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
 	Updated_at    *time.Time `json:"updated_at" sql:"type:timestamp;default:NULL"`
