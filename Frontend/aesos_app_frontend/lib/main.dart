@@ -1,3 +1,4 @@
+import 'package:aesos_app_frontend/screens/profile_screen.dart';
 import 'package:aesos_app_frontend/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Aesos',
       theme: ThemeData.dark(),
-      home: SignupScreen(),
+      home: ProfileScreen(),
     );
   }
 }
