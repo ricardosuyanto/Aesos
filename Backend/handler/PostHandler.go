@@ -4,6 +4,7 @@ import (
 	"Project/Aesos/request"
 	"Project/Aesos/service"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,7 +43,16 @@ func (h *PostHandler) MakePost(c *gin.Context) {
 
 func (h *PostHandler) GetPostList(c *gin.Context) {
 
-	post, status, err := h.Service.GetPostList()
+	user_id, err := strconv.Atoi(c.Query("user_id"))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message" : err.Error(),
+		})
+		return
+	}
+
+	post, status, err := h.Service.GetPostList(user_id)
 
 	if err != nil {
 		c.JSON(status, gin.H{

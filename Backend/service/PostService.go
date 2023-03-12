@@ -10,7 +10,7 @@ import (
 
 type PostService interface {
 	MakePost(request request.PostRequest) (int, error)
-	GetPostList() ([]model.Post, int, error)
+	GetPostList(user_id int) ([]model.Post, int, error)
 }
 
 type postService struct {
@@ -51,9 +51,9 @@ func (s *postService) MakePost(request request.PostRequest) (int, error) {
 
 }
 
-func (s *postService) GetPostList() ([]model.Post, int, error) {
+func (s *postService) GetPostList(user_id int) ([]model.Post, int, error) {
 
-	posts, err := s.Repo.GetPostList()
+	posts, err := s.Repo.GetPostList(user_id)
 
 	if err != nil {
 		return nil, http.StatusInternalServerError, err
