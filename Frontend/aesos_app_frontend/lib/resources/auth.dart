@@ -22,7 +22,7 @@ class AuthMethod {
       };
       final json = jsonEncode(
           {"email": email, "password": password, "username": username});
-      final response = await http.post(url, headers: headers, body: json);
+      response = await http.post(url, headers: headers, body: json);
       return response;
     } catch (e) {
       log(e.toString());
