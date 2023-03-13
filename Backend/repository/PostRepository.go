@@ -7,7 +7,7 @@ import (
 )
 
 type PostRepository interface {
-	MakePost(post model.Post) (error) 
+	MakePost(post model.Post) error
 	GetPostList(user_id int) ([]model.Post, error)
 }
 
@@ -19,8 +19,8 @@ func NewPostRepository(db *gorm.DB) *postRepository {
 	return &postRepository{db}
 }
 
-func (r *postRepository) MakePost(post model.Post) (error) {
-	
+func (r *postRepository) MakePost(post model.Post) error {
+
 	result := r.db.Create(&post)
 
 	if result.Error != nil {
@@ -39,7 +39,7 @@ func (r *postRepository) GetPostList(user_id int) ([]model.Post, error) {
 
 	// r.db.Where("user_id = ?", 1).Find(&followers)
 
-	// var followerIDs []int 
+	// var followerIDs []int
 
 	// for _, f := range followers {
 	// 	followerIDs = append(followerIDs, f.Follower_id)
@@ -53,25 +53,25 @@ func (r *postRepository) GetPostList(user_id int) ([]model.Post, error) {
 
 	// Ambil semua posts yang di post user
 	if err := r.db.Find(&posts).Error; err != nil {
-        return nil, err
-    }
+		return nil, err
+	}
 
-    // Ambil semua ID yang user follow
-    var followingIDs []uint
-    if err := r.db.Table("following").Select("following_id").Where("user_id = ?", user_id).Pluck("following_id", &followingIDs).Error; err != nil {
-        return nil, err
-    }
+	// Ambil semua ID yang user follow
+	var followingIDs []uint
+	if err := r.db.Table("following").Select("following_id").Where("user_id = ?", user_id).Pluck("following_id", &followingIDs).Error; err != nil {
+		return nil, err
+	}
 
-    // Ambile semua ID yang follower user
-    var followerIDs []uint
-    if err := r.db.Table("followers").Select("follower_id").Where("user_id = ?", user_id).Pluck("follower_id", &followerIDs).Error; err != nil {
-        return nil, err
-    }
+	// Ambile semua ID yang follower user
+	var followerIDs []uint
+	if err := r.db.Table("followers").Select("follower_id").Where("user_id = ?", user_id).Pluck("follower_id", &followerIDs).Error; err != nil {
+		return nil, err
+	}
 
-    // Ambil post nya
-    if err := r.db.Where("user_id IN (?)", followingIDs).Or("user_id IN (?)", followerIDs).Or("user_id = (?)", user_id).Find(&posts).Error; err != nil {
-        return nil, err
-    }
+	// Ambil post nya
+	if err := r.db.Where("user_id IN (?)", followingIDs).Or("user_id IN (?)", followerIDs).Or("user_id = (?)", user_id).Find(&posts).Error; err != nil {
+		return nil, err
+	}
 
 	// if getAllPost.Error != nil {
 	// 	return nil, getAllPost.Error
