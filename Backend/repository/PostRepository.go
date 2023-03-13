@@ -52,7 +52,7 @@ func (r *postRepository) GetPostList(user_id int) ([]model.Post, error) {
 	//getAllPost := r.db.Preload("Post").Find(&user)
 
 	// Ambil semua posts yang di post user
-	if err := r.db.Where("user_id = ?", user_id).Find(&posts).Error; err != nil {
+	if err := r.db.Find(&posts).Error; err != nil {
 		return nil, err
 	}
 
@@ -69,7 +69,7 @@ func (r *postRepository) GetPostList(user_id int) ([]model.Post, error) {
 	}
 
 	// Ambil post nya
-	if err := r.db.Where("user_id IN (?)", followingIDs).Or("user_id IN (?)", followerIDs).Find(&posts).Error; err != nil {
+	if err := r.db.Where("user_id IN (?)", followingIDs).Or("user_id IN (?)", followerIDs).Or("user_id = (?)", user_id).Find(&posts).Error; err != nil {
 		return nil, err
 	}
 
