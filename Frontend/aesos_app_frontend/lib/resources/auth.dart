@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 
 class AuthMethod {
+  //sign up
   Future<http.Response?> signUp({
     required String email,
     required String password,
@@ -29,4 +30,6 @@ class AuthMethod {
     }
     return response;
   }
+
+  //logging in
 }
