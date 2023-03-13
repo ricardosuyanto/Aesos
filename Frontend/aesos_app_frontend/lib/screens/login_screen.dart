@@ -34,12 +34,12 @@ class _LoginScreenState extends State<LoginScreen> {
     if (res!.statusCode == 200) {
       Map<String, dynamic> map = jsonDecode(res.body);
 
-      String username = map['username'];
-      String user = map['user'];
-      String message = map['message'];
-      print(message);
-      print(user);
-      print(username);
+      // String username = map['username'];
+      // String user = map['user'];
+      // String message = map['message'];
+      // print(message);
+      // print(user);
+      // print(username);
 
       final data = jsonDecode(res.body);
       // Map<String, dynamic> map = jsonDecode(res.body);

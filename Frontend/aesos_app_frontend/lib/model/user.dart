@@ -12,7 +12,8 @@ class User {
         username: json['username'],
         email: json['email'],
         password: json['password'],
-        id: json['id']);
+        id: json['id']
+    );
   }
 }
 
@@ -27,7 +28,7 @@ class Login {
     return Login(
       message: json['message'],
       token: json['token'],
-      user: json['user'],
+      user: User.fromJson(json['user']),
     );
   }
 }
