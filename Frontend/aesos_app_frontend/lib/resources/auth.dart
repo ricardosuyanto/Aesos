@@ -32,4 +32,24 @@ class AuthMethod {
   }
 
   //logging in
+  Future<http.Response?> login({
+    required String username,
+    required String password,
+  }) async {
+    http.Response? response;
+    try {
+      final url = Uri.parse('http://localhost:8081/login');
+      final headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "application/x-www-form-urlencoded",
+        "Accept": "application/json"
+      };
+      final json = jsonEncode({"username": username, "password": password});
+      response = await http.post(url, headers: headers, body: json);
+      return response;
+    } catch (e) {
+      log(e.toString());
+    }
+    return response;
+  }
 }

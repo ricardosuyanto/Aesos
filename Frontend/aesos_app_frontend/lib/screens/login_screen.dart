@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:aesos_app_frontend/utils/color.dart';
 import 'package:aesos_app_frontend/widgets/text_field_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../model/user.dart';
+import '../resources/auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,14 +15,41 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
     super.dispose();
-    _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
+  }
+
+  Future<void> login() async {
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+
+    var res = await AuthMethod().login(username: username, password: password);
+
+    if (res!.statusCode == 200) {
+      Map<String, dynamic> map = jsonDecode(res.body);
+
+      String username = map['username'];
+      String user = map['user'];
+      String message = map['message'];
+      print(message);
+      print(user);
+      print(username);
+
+      final data = jsonDecode(res.body);
+      // Map<String, dynamic> map = jsonDecode(res.body);
+      // String name = map['name'];
+      // int age = map['age'];
+      Login login = Login.fromJson(data);
+      print(login.message);
+    } else {
+      print("eror");
+    }
   }
 
   @override
@@ -44,9 +75,9 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 64,
             ),
             TextFieldInput(
-                textEditingController: _emailController,
-                hintText: 'Enter your email',
-                textInputType: TextInputType.emailAddress),
+                textEditingController: _usernameController,
+                hintText: 'Enter your username',
+                textInputType: TextInputType.text),
             const SizedBox(
               height: 24,
             ),
@@ -60,6 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 24,
             ),
             InkWell(
+              onTap: login,
               child: Container(
                 width: double.infinity,
                 alignment: Alignment.center,
