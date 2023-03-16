@@ -12,8 +12,16 @@ class User {
         username: json['username'],
         email: json['email'],
         password: json['password'],
-        id: json['id']
-    );
+        id: json['id']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'username': username,
+      'email': email,
+      'password': password,
+      'id': id
+    };
   }
 }
 

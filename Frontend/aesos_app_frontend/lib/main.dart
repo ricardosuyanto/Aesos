@@ -1,4 +1,4 @@
-import 'package:aesos_app_frontend/screens/login_screen.dart';
+import 'package:aesos_app_frontend/responsive/mobile_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Aesos',
       theme: ThemeData.dark(),
-      home: LoginScreen(),
+      home: MobileScreenLayout(),
     );
   }
 }
