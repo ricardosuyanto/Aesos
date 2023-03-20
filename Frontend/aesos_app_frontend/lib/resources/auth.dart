@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthMethod {
+  final storage = FlutterSecureStorage();
   //sign up
   Future<http.Response?> signUp({
     required String email,
@@ -52,4 +54,9 @@ class AuthMethod {
     }
     return response;
   }
+
+  /*Future<model.User> getUserDetails() async {
+    
+    return model.User.fromJson(json as Map<String, dynamic>);
+  }*/
 }
