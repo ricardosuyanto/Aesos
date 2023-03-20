@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await storage.write(key: 'token', value: login.token);
 
       String? value = await storage.read(key: 'token');
-
+      print(login.user.username);
       print(value);
 
       Navigator.of(context).pushReplacement(
