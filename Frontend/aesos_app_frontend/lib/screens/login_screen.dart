@@ -8,7 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../model/user.dart';
 import '../resources/auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 import '../utils/utils.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -38,16 +37,16 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     if (res!.statusCode == 200) {
       final data = jsonDecode(res.body);
-      // Map<String, dynamic> map = jsonDecode(res.body);
-      // String name = map['name'];
-      // int age = map['age'];
+
       Login login = Login.fromJson(data);
       await storage.write(key: 'token', value: login.token);
 
-      String? value = await storage.read(key: 'token');
-      print(login.user.username);
-      print(value);
+      var user = User.fromJson(data['user']);
+      var userMap = user.toJson();
+      var userString = jsonEncode(userMap);
+      await storage.write(key: 'user', value: userString);
 
+      print(userString);
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const HomeScreen()));
     } else {
