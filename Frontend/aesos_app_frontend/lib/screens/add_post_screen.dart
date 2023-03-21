@@ -1,10 +1,13 @@
-import 'dart:typed_data';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:aesos_app_frontend/utils/color.dart';
 import 'package:aesos_app_frontend/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../model/user.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({Key? key}) : super(key: key);
@@ -13,8 +16,39 @@ class AddPostScreen extends StatefulWidget {
   _AddPostScreenState createState() => _AddPostScreenState();
 }
 
+/*Future<String> imageToBase64(File imageFile) async {
+  List<int> imageBytes = await imageFile.readAsBytes();
+  String base64Image = base64Encode(imageBytes);
+  return base64Image;
+}*/
+
 class _AddPostScreenState extends State<AddPostScreen> {
-  Uint8List? _file;
+  File? _file;
+  late String _base64Image;
+  Future<void> getUserDetail() async {}
+
+  Future<void> uploadPost() async {
+    print(_file);
+    final picker = ImagePicker();
+    final storage = FlutterSecureStorage();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final bytes = await pickedFile!.readAsBytes();
+    final String? myValue = await storage.read(key: 'user');
+    User user = User.deserialize(await storage.read(key: 'user'));
+    print(user.id);
+    print(user.email);
+
+    setState(() {
+      _base64Image = base64.encode(bytes);
+    });
+
+    print(_base64Image);
+
+    /*List<int> imageBytes = _file!.readAsBytesSync();
+    String baseimage = base64Encode(imageBytes);
+    //set source: ImageSource.camera to get image from camera
+    print(baseimage);*/
+  }
 
   _selectImage(BuildContext context) async {
     return showDialog(
@@ -28,7 +62,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 child: const Text('Take a photo'),
                 onPressed: () async {
                   Navigator.of(context).pop();
-                  Uint8List file = await pickImage(ImageSource.camera);
+                  File file = await pickImage(ImageSource.camera);
                   setState(() {
                     _file = file;
                   });
@@ -39,10 +73,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 child: const Text('Choose a photo'),
                 onPressed: () async {
                   Navigator.of(context).pop();
-                  Uint8List file = await pickImage(ImageSource.gallery);
-                  setState(() {
-                    _file = file;
-                  });
+
+                  uploadPost();
                 },
               )
             ],
@@ -52,12 +84,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final storage = FlutterSecureStorage();
-
-    Future<void> getUserDetail() async {
-      final String? myValue = await storage.read(key: 'user');
-    }
-
     return _file == null
         ? Center(
             child: IconButton(

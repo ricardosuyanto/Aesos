@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:aesos_app_frontend/screens/home_screen.dart';
 import 'package:aesos_app_frontend/utils/color.dart';
 import 'package:aesos_app_frontend/widgets/text_field_input.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../model/user.dart';
 import '../resources/auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../responsive/mobile_screen.dart';
 import '../utils/utils.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -44,11 +44,11 @@ class _LoginScreenState extends State<LoginScreen> {
       var user = User.fromJson(data['user']);
       var userMap = user.toJson();
       var userString = jsonEncode(userMap);
-      await storage.write(key: 'user', value: userString);
+      await storage.write(key: 'user', value: User.serialize(user));
 
       print(userString);
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()));
+          MaterialPageRoute(builder: (context) => const MobileScreenLayout()));
     } else {
       print("eror");
 
