@@ -8,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../model/user.dart';
+import '../resources/post.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({Key? key}) : super(key: key);
@@ -16,41 +17,37 @@ class AddPostScreen extends StatefulWidget {
   _AddPostScreenState createState() => _AddPostScreenState();
 }
 
-/*Future<String> imageToBase64(File imageFile) async {
-  List<int> imageBytes = await imageFile.readAsBytes();
-  String base64Image = base64Encode(imageBytes);
-  return base64Image;
-}*/
-
 class _AddPostScreenState extends State<AddPostScreen> {
   File? _file;
-  late String _base64Image;
-  Future<void> getUserDetail() async {}
+  String? _base64Image;
 
   Future<void> uploadPost() async {
     print(_file);
     final picker = ImagePicker();
     final storage = FlutterSecureStorage();
+    //after get data image
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     final bytes = await pickedFile!.readAsBytes();
-    final String? myValue = await storage.read(key: 'user');
+    //get user in object
     User user = User.deserialize(await storage.read(key: 'user'));
-    print(user.id);
-    print(user.email);
-
+    //base64 in _base64Image
     setState(() {
       _base64Image = base64.encode(bytes);
     });
+    var res = await PostMethod().makePost(
+        user_id: user.id,
+        title: "testing",
+        description: "masuk",
+        picture: _base64Image.toString());
 
-    print(_base64Image);
-
-    /*List<int> imageBytes = _file!.readAsBytesSync();
-    String baseimage = base64Encode(imageBytes);
-    //set source: ImageSource.camera to get image from camera
-    print(baseimage);*/
+    if (res!.statusCode == 200) {
+      print("got it");
+    } else {
+      print("eror ");
+    }
   }
 
-  _selectImage(BuildContext context) async {
+  Future _selectImage(BuildContext context) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -84,7 +81,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _file == null
+    final base64Image = 'data:image/png;base64,$_base64Image';
+
+    return _base64Image == null
         ? Center(
             child: IconButton(
               icon: const Icon(Icons.upload),
@@ -141,8 +140,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       child: Container(
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                        image: NetworkImage(
-                            'https://images.unsplash.com/photo-1679267382471-2ba3ece3d4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60'),
+                        image: _base64Image == null
+                            ? NetworkImage(
+                                'https://images.unsplash.com/photo-1679240017168-5d2adb0529a7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80')
+                            : NetworkImage(base64Image),
                         fit: BoxFit.fill,
                         alignment: FractionalOffset.topCenter,
                       ))),
