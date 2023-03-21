@@ -1,11 +1,17 @@
+import 'dart:convert';
+
 class User {
-  final String? username;
-  final String? email;
-  final String? password;
-  final int? id;
+  final String username;
+  final String email;
+  final String password;
+  final int id;
 
   // ignore: non_constant_identifier_names
-  User({this.username, this.email, this.password, this.id});
+  User(
+      {required this.username,
+      required this.email,
+      required this.password,
+      required this.id});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -23,6 +29,17 @@ class User {
       'id': id
     };
   }
+
+  static Map<String, dynamic> toMap(User user) => <String, dynamic>{
+        'username': user.username,
+        'email': user.email,
+        'password': user.password,
+        'id': user.id
+      };
+
+  static String serialize(User user) => json.encode(User.toMap(user));
+
+  static User deserialize(String? json) => User.fromJson(jsonDecode(json!));
 }
 
 class Login {
