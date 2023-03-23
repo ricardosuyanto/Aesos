@@ -20,40 +20,55 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   File? _file;
   String? _base64Image;
+  bool _isLoading = false;
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
 
   Future<void> uploadPost() async {
-    print(_file);
-    final picker = ImagePicker();
+    setState(() {
+      _isLoading = true;
+    });
     final storage = FlutterSecureStorage();
-    //after get data image
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    final bytes = await pickedFile!.readAsBytes();
+
     //get user in object
     User user = User.deserialize(await storage.read(key: 'user'));
-    //base64 in _base64Image
-    setState(() {
-      _base64Image = base64.encode(bytes);
-    });
-    var res = await PostMethod().makePost(
-        user_id: user.id,
-        title: "testing",
-        description: _descriptionController.text,
-        picture: _base64Image.toString());
+    try {
+      var res = await PostMethod().makePost(
+          user_id: user.id,
+          title: _titleController.text,
+          description: _descriptionController.text,
+          picture: _base64Image.toString());
 
-    if (res!.statusCode == 200) {
-      print("got it");
-    } else {
-      print("eror ");
+      if (res!.statusCode == 200) {
+        setState(() {
+          _isLoading = false;
+        });
+        showSnackBar("Posted!", context);
+        clearImage();
+      } else {
+        showSnackBar("Error", context);
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      showSnackBar(e.toString(), context);
     }
   }
 
+  //set base64 image
   Future<void> getImageBase64() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     final bytes = await pickedFile!.readAsBytes();
     setState(() {
       _base64Image = base64.encode(bytes);
+    });
+  }
+
+  void clearImage() {
+    setState(() {
+      _base64Image = null;
     });
   }
 
@@ -111,13 +126,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
               backgroundColor: mobileBackgroundColor,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () {},
+                onPressed: clearImage,
               ),
               title: const Text('Post to'),
               centerTitle: false,
               actions: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    uploadPost();
+                  },
                   child: const Text(
                     'Post',
                     style: TextStyle(
@@ -131,6 +148,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
             body: Column(
               children: [
+                _isLoading ? const LinearProgressIndicator() : Container(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,6 +186,23 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       ),
                     ),
                     const Divider(),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      child: TextField(
+                        controller: _titleController,
+                        decoration: const InputDecoration(
+                          hintText: "Input title",
+                          border: InputBorder.none,
+                        ),
+                        maxLines: 8,
+                      ),
+                    ),
                   ],
                 )
               ],

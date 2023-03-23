@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       print("eror");
 
-      showSnackBar(res as BuildContext, context as String);
+      showSnackBar(res.toString(), context);
     }
     setState(() {
       _isLoading = true;
