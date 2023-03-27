@@ -1,24 +1,25 @@
 import 'dart:convert';
-
+import 'dart:io' as Io;
 import 'package:aesos_app_frontend/utils/color.dart';
 import 'package:flutter/material.dart';
 
-import '../model/Post.dart';
+class PostCard extends StatelessWidget {
+  final String title;
+  final String description;
+  final String picture;
 
-import 'package:http/http.dart' as http;
+  PostCard(
+      {required this.title, required this.description, required this.picture});
 
-class PostCard extends StatefulWidget {
-  const PostCard({super.key});
+//   @override
+//   State<PostCard> createState() => _PostCardState();
+// }
 
-  @override
-  State<PostCard> createState() => _PostCardState();
-}
+// class _PostCardState extends State<PostCard> {
+  //bool _isLoading = false;
+//  List<Post> posts = [];
 
-class _PostCardState extends State<PostCard> {
-  bool _isLoading = false;
-  List<Post> posts = [];
-
-  Future<void> _fetchPosts() async {
+  /*Future<void> _fetchPosts() async {
     setState(() {
       _isLoading = true;
     });
@@ -49,11 +50,12 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     super.initState();
     _fetchPosts();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
-    print(posts);
+    final decodedBytes = base64Decode(picture);
+    var file = Io.File("image.png");
     return Container(
       color: mobileBackgroundColor,
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -78,7 +80,7 @@ class _PostCardState extends State<PostCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'username',
+                          title,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -122,8 +124,8 @@ class _PostCardState extends State<PostCard> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.35,
             width: double.infinity,
-            child: Image.network(
-              'https://images.unsplash.com/photo-1679499454657-f504ffd43843?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+            child: Image.memory(
+              base64Decode(picture),
               fit: BoxFit.cover,
             ),
           ),
@@ -180,7 +182,7 @@ class _PostCardState extends State<PostCard> {
                           ),
                         ),
                         TextSpan(
-                          text: 'Hey this description to be replace',
+                          text: description,
                         ),
                       ],
                     ),
